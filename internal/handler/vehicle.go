@@ -3,8 +3,10 @@ package handler
 import (
 	"app/internal"
 	"net/http"
+	"strings"
 
 	"github.com/bootcamp-go/web/response"
+	"github.com/go-chi/chi/v5"
 )
 
 // VehicleJSON is a struct that represents a vehicle in JSON format
@@ -73,6 +75,26 @@ func (h *VehicleDefault) GetAll() http.HandlerFunc {
 		response.JSON(w, http.StatusOK, map[string]any{
 			"message": "success",
 			"data":    data,
+		})
+	}
+}
+
+func (h *VehicleDefault) FindAverageSpeedByBrand() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		brand := strings.ToLower(chi.URLParam(r, "brand"))
+
+		averageSpeed, err := h.sv.FindAverageSpeedByBrand(brand)
+		if err != nil {
+			response.JSON(w, http.StatusNotFound, map[string]any{
+				"message": err.Error(),
+				"data":    nil,
+			})
+			return
+		}
+
+		response.JSON(w, http.StatusOK, map[string]any{
+			"message": "success",
+			"data":    averageSpeed,
 		})
 	}
 }
