@@ -37,7 +37,6 @@ func (s *VehicleDefault) FindAverageSpeedByBrand(brand string) (averageSpeed flo
 
 	if count == 0.0 {
 		err = errors.New("brand not found")
-		v = nil
 		return
 	}
 
